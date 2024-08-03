@@ -1,0 +1,20 @@
+stages:
+  - sync
+
+sync_with_github:
+  stage: sync
+  image: alpine:latest
+  script:
+    - apk add --no-cache git
+    - git config --global user.name "Your Name"
+    - git config --global user.email "youremail@example.com"
+    - git clone https://${GITLAB_TOKEN}@gitlab.com/your_gitlab_username/your_gitlab_repo.git
+    - cd your_gitlab_repo
+    - git remote add github https://${GITHUB_TOKEN}@github.com/original_owner/original_repo.git
+    - git fetch github
+    - git checkout main
+    - git merge github/main
+    - git push origin main
+  only:
+    - schedules
+    
